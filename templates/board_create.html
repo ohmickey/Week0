@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+    <!-- bulma -->
+    <link rel ="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+		<!-- JS -->
+		<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+			integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+			crossorigin="anonymous"
+		></script>
+
+		<!-- 구글폰트 -->
+		<link
+			href="https://fonts.googleapis.com/css?family=Stylish&display=swap"
+			rel="stylesheet"
+		/>
+    <script>
+      function save(){
+        let title = $('#title').val();
+        let text = $('#text').val();
+        if(title== ""){
+          alert("제목을 입력하세요.");
+        } else if(text == ""){
+          alert("본문을 입력하세요.");
+        } else{
+          $.ajax({
+            type: "POST",
+            url: "/board_create",
+            data: {title_give:title, text_give:text},
+            success: function(){
+              location.href= '/board'
+            }
+          })
+        }
+      }
+
+
+      function modify(post_id){
+        let title = $('#title').val();
+        let text = $('#text').val();
+        const url_ = '/modify_board/' + post_id;
+          $.ajax({
+            type: "POST",
+            url: url_,
+            data: {"title_give" : title, "text_give" : text, "id_" : post_id},
+            success: function(){
+              location.href= '/board'
+            }
+          })
+      }
+
+    </script>
+    <style>
+      .wrap{
+        margin: 5%;
+      }
+    </style>
+    </head>
+    <body>
+      <div class="wrap" >
+        {% if post_id %}
+        <input id="title" class="input" type="text" placeholder="제목" value = "{{ contents.title}}">
+        <p></p>
+        <textarea id="text" class="textarea" placeholder="본문"> {{ contents.text }} </textarea>
+        <p></p>
+
+        {% else %}
+
+        <input id="title" class="input" type="text" placeholder="제목">
+        <p></p>
+        <textarea id="text" class="textarea" placeholder="본문"></textarea>
+        <p></p>
+
+        {% endif %}
+
+        
+        {% if post_id %}
+        <button class="button" onclick="modify('{{post_id}}')">수정</button>
+        {% else %}
+        <button class="button" onclick="save()">게시</button>
+        {% endif %}
+        
+      </div>
+    </body>
+</html>

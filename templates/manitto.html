@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div>
+{% if state == 0 %}
+    <p>현재는 게임 준비상태 입니다.</p>
+{% elif state == 1 %}
+    <p> 당신은 "{{ data.to }}" 의 마니또 입니다. </p>
+    <p> 미션을 성공하세요 </p>
+    미션 : {{ data.mission }}
+{% elif state == 2 %}
+<p>게임이 끝났습니다.</p>
+
+<p>당신의 마니또는 "{{ data.your_manitto }}" 였습니다.</p>
+<p> 당신의 마니또의 미션은 "{{ data.manitto_mission }}" 이었습니다. </p>
+{% endif %}
+</div>
+
+
+{% endblock %}

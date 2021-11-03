@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div class="container">
+    {% if user_list|length ==0 %}
+        <p> 아직 아무도 회원가입을 하지 않았습니다. </p>
+    {% else %}
+        <div class="row">
+        <div class="col">
+            이름
+        </div>
+        <div class="col">
+            아이디
+        </div>
+        <div class="col">
+            닉네임
+        </div>
+        </div>
+        {% for user in user_list %}
+            <div class="row">
+
+            <div class="col">
+                {{ user.username }}
+            </div>
+
+            <div class="col">
+                {{ user.user_id }}
+            </div>
+
+            <div class="col">
+                {{ user.nickname }}
+            </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+  </div>
+
+
+
+  {% if match_list|length ==0 %}
+  <p>아직 매칭을 하지 않았습니다. 매칭하기를 눌러주세요!</p>
+  <div>
+    <button class="btn btn-primary" onclick="location.href='/match'">매칭하기</button>
+  </div>
+  {% else %}
+  <div class="row">
+    <div class="col">
+        from
+    </div>
+    <div class="col">
+        to
+    </div>
+    <div class="col">
+        mission
+    </div>
+    </div>
+    {% for match in match_list %}
+        <div class="row">
+
+        <div class="col">
+            {{ match.from }}
+        </div>
+
+        <div class="col">
+            {{ match.to }}
+        </div>
+
+        <div class="col">
+            {{ match.mission }}
+        </div>
+        </div>
+    {% endfor %}
+
+    <button class="btn btn-primary" onclick="location.href='/match'">재 매칭하기</button>
+    <button class="btn btn-primary" onclick="location.href='/matching_mission_clear'">매칭된 미션 초기화 하기</button>
+  {% endif %}
+
+
+        <form action="{{ url_for('mission_register') }}"  method="post">
+            <textarea name = "text">
+            </textarea>
+            <button type="submit" class="btn btn-primary">미션 생성하기</button>
+        </form>
+
+        {% if match_list|length ==0 %}
+            <p>아직 만들어진 미션이 없습니다.</p>
+        {% else %}
+            
+            <div class= "col"> 
+                미션 목록
+            </div>
+            {% for mission in mission_list %}
+            <div class= "col"> 
+                {{ mission.mission}}
+            </div>
+            {% endfor %}
+            <button class="btn btn-primary" onclick="location.href='/mission_link'">미션 연결 하기</button>
+        {% endif%}
+
+
+        {% if state == 0 %}
+            <button class="btn btn-primary" onclick="location.href='/game'">게임 시작</button>
+        {% elif state == 1 %}
+            <button class="btn btn-primary" onclick="location.href='/game'">게임 마감</button>
+        {% elif state == 2 %}
+            <button class="btn btn-primary" onclick="location.href='/game'">게임 준비</button>
+        {% endif %}
+
+
+
+
+
+{% endblock %}

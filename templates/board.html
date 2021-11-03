@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+    <!-- bulma -->
+    <link rel ="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+		<!-- JS -->
+		<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+			integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+			crossorigin="anonymous"
+		></script>
+
+		<!-- 구글폰트 -->
+		<link
+			href="https://fonts.googleapis.com/css?family=Stylish&display=swap"
+			rel="stylesheet"
+		/>
+    <script>
+      function comment_save(id_){
+        value = "#comment_input_" + id_
+        let comment = $(value).val()
+        $.ajax({
+            type: "POST",
+            url: "/board",
+            data: {comment_give:comment, id_give:id_},
+            success: function(){
+              alert('댓글작성이 완료되었습니다.');
+              window.location.reload();
+            }
+          })
+      }
+      
+      function comment_hide_show(title){
+        if($('comment-box').css('display') == "none"){
+          $('comment-box').show();
+        }
+      }
+
+      function alert_()
+      {
+        alert("로그인을 해주세요!");
+        return;
+      }
+
+
+    </script>
+		<style type="text/css">
+
+    *{
+	    font-family: 'Jua', san0s-serif;
+    }
+    .navbar{
+      height: 60px;
+      background-color: #3F986D;
+      padding-left: 24px;
+      padding-right: 2%;
+      display: flex;
+      align-items: center;
+    }
+
+    .comment_list{
+      font-size: 10;
+    }
+
+    .mission{
+      white-space: nowrap;
+    }
+    .logout-info{
+      margin-left:auto;
+    }
+		</style>
+	</head>
+	<body>
+    <div class="wrap">
+      <div class="navbar">
+        <div class="misson">
+          <a href="/manitto"> 마니또 및 미션확인  </a>
+          
+        </div>
+        <div class="logout-info">
+            <a href="/logout">logout  </a>
+        </div>
+      </div>
+      <div>
+      </div>
+        <div class="table-box">
+        {% for post in post_list %}
+          <div class="card">
+            <div class="card-content">
+              <div class="media">
+                <div class="media-content">
+                  <p id="" class="title is-4">{{post.title}}</p>
+                  <p>{{ post.nickname }}</p>
+                </div>
+              </div>
+              <div class="content">
+                {{post.text}}
+              </div>
+              {% if g.user == post.user_id %}
+              <a href = "{{ url_for('modify_board', post_id=post._id) }}"> 수정 </a>
+              <a href = "{{ url_for('delete_board', post_id=post._id) }}"> 삭제 </a>
+              {% endif %}
+              <footer class="card-footer">
+                <div onclick="comment_hide_show('{{post._id}}')" style="display:flex">
+                  <img style="height: 30px; width: 28px;" src=../static/comment_icon.png><p style="margin-left:2px"> 댓글쓰기 </p>
+                </div>
+                <time style="margin-left:auto;" datetime="2016-1-1">{{post.posted_date}}</time>
+              </footer>
+              {% for comment in post.comment%}
+              <div id="comment-box-{{post.title}}">
+                <div class="comment_list">
+                  <br>
+                  <p style="font-size: 10; font-weight: 700;">{{comment.nickname}}</p>
+                  <p class="comment">{{comment.comment_text}}</p>
+                  <br>
+                </div>
+              {% endfor %}
+                <div style="display: flex;">
+                  <input id="comment_input_{{post._id}}" style="margin-right:5%;"class="input is-small" type="text" placeholder="댓글을 작성하세요.">
+                  {% if g.user %}
+                  <button class="button is-small" onclick="comment_save('{{post._id}}')">댓글작성</button>
+                  {% else %}
+                  <button class="button is-small" onclick="alert_()">댓글작성</button>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+        {% if g.user %}
+        <button class="button" onclick="location.href='/board_create'">글작성</button>  
+        {% else %}
+        <button class="button" onclick="alert_()">글작성</button>
+          {% endif %}
+        </div>
+
+    </div>
+	</body>
+</html>
